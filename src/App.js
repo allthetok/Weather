@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import Geocode from 'react-geocode'
+const App = () => {
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [city, setCity] = useState('')
+    
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        Geocode.setApiKey(process.env.REACT_APP_GOOGLE_API_KEY)
+        Geocode.setLanguage("en")
+        
+        Geocode.fromAddress(city).then(
+            (response) => {
+                const { lat, lng } = response.results[0].geometry.location
+                console.log(lat, lng)
+            },
+            (error) => {
+                console.error(error)
+            }
+        )
+        console.log(city)
+    }
+
+    return (
+        <div>
+            <h2>Weather App</h2>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    City:
+                    <input type="text" onChange={(e) => setCity(e.target.value)}/>
+                    <input type="submit" value="Submit" />
+                </label>
+            </form>
+            Current Temperature at {city} : 
+        </div>
+    )
 }
 
-export default App;
+export default App
