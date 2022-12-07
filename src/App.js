@@ -193,6 +193,7 @@ const App = () => {
       {weather.degree !== '' &&
       <>
         <p>Current Temperature in {name} : {Math.floor(weather.degree)}°C and {condNumToString(weather.condition)}</p>
+        <p>Feels like {Math.floor(weather.appdegree)} </p>
         {/* <img src='../assets/small/png/' /> */}
       </>
       }
