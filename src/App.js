@@ -1,7 +1,13 @@
 /* eslint-disable no-undef */
+//import './App.css'
 import React, { useState } from 'react'
 import Geocode from 'react-geocode'
 import axios from 'axios'
+import Card from 'react-bootstrap/Card'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import Sunny from './assets/sunny-sky.png'
+import Background from './assets/background-image.jpg'
+
 
 const weatherCode = {
   '0': 'Unknown',
@@ -180,27 +186,38 @@ const App = () => {
   //   }
 
   return (
-    <div>
-      <h2>Weather App</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
+    <div style={{ backgroundImage: `url(${Background})`,backgroundRepeat: 'no-repeat',backgroundSize: 'cover', height:'100%',width:'100%' }}>
+      <div style={{ margin: 'auto', width: '50%' }}>
+        <h2 style={{ margin: 'auto', width: '50%', textAlign: 'center' }}>Weather App</h2>
+        <form style={{ margin: 'auto', width: '30%' }} onSubmit={handleSubmit}>
+          <label>
                     City:
-          <input type="text" onChange={(e) => setInputCity(e.target.value)}/>
-          <input type="submit" value="Submit" />
-        </label>
-      </form>
+            <input type="text" onChange={(e) => setInputCity(e.target.value)}/>
+            <input type="submit" value="Submit" />
+          </label>
+        </form>
 
-      {weather.degree !== '' &&
+        {weather.degree !== '' &&
       <>
-        <p>Current Temperature in {name} : {Math.floor(weather.degree)}°C and {condNumToString(weather.condition)}</p>
-        <p>Feels like {Math.floor(weather.appdegree)} </p>
-        {/* <img src='../assets/small/png/' /> */}
+        {/* <p>Current Temperature in {name} : {Math.floor(weather.degree)}°C and {condNumToString(weather.condition)}. It feels like {Math.floor(weather.appdegree)}°C.</p>
+        <img src='../assets/small/png/' /> */}
+        <Card style={{ width: '30rem', margin: 'auto' }}>
+          <Card.Img variant="top" src={Sunny} />
+          {/* <img src={Sunny} /> */}
+          <Card.Body>
+            <Card.Title>{name}</Card.Title>
+            <Card.Text>
+                The current temperature in {name} is {Math.floor(weather.degree)} °C and {condNumToString(weather.condition)}. It feels like {Math.floor(weather.appdegree)}°C
+            </Card.Text>
+          </Card.Body>
+        </Card>
       </>
-      }
+        }
 
-      {weather.degree === '' &&
+        {weather.degree === '' &&
                 <p>Enter a city to get realtime weather data!</p>
-      }
+        }
+      </div>
 
     </div>
   )
