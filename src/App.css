@@ -1,3 +1,69 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    font-family: 'Roboto';
+}
+
 .background {
-    background-image: 'url(./assets/sunny-sky.png)';
+    background-image: url(./assets/background-image-3.jpg);
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%; 
+    background-size: cover;
+    background-position: center;
+}
+
+.content-wrap {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    font-family: 'Roboto';
+    color: #000;
+}
+
+.weather-code {
+    width: 100px;
+    margin: auto;
+}
+
+label {
+    width: 100%;
+    height: 100%;
+}
+
+h2 {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+form {
+    margin: auto;
+    width: 50%;
+}
+
+.card {
+    width: 30rem;
+    margin: auto;
+}
+
+.search {
+    background: hsla(0,0%,98%,0.85);
+    border: none;
+    border-radius: 20px;
+    margin-bottom: 3%;
+    outline: none;
+    padding: 10px 6.8%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+input[type=submit] {
+    padding: 5px 15px;
+    border: 0 none;
+    background: #B2BABB;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
 }
