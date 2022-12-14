@@ -35,21 +35,27 @@ const weatherCode = {
   '8000': 'Thunderstorm'
 }
 
-const Timer = (startingTime) => {
+const Timer = ({ startingTime }) => {
+  // const [clock, setClock] = useState(startingTime.startingTime)
+  // const clockRef = useRef(startingTime)
+  // clockRef.current = clock
   const [clock, setClock] = useState(startingTime)
-  // useEffect(() => {
-  //   if (startingTime !== null) {
-  //     setTimeout(() => {
-  //       let timeStamp = new Date(startingTime)
-  //       timeStamp.setSeconds(timeStamp.getSeconds() + 1)
-  //       setClock(timeStamp.toLocaleTimeString())
-  //       //setTime(timeStamp.toLocaleTimeString())
-  //     }, 1000)
-  //   }
-  // },[])
+  const [format, setFormat] = useState('')
+
+  useEffect(() => {
+    setInterval(() => {
+      let date = new Date(clock)
+      console.log(date.toDateString())
+      setFormat(`${date.getHours()}:${date.getMinutes()}`)
+      setClock(clock + 1)
+    }, 1000)
+  },[clock])
+
   return (
     <div>
-      hello
+      {/* {clock.getHours()} : {clock.getSeconds()} */}
+      {clock}
+      {format}
     </div>
   )
 }
@@ -126,16 +132,7 @@ const App = () => {
       const { lat, lng } = res.results[0].geometry.location
       axios.get(`http://api.timezonedb.com/v2.1/get-time-zone?key=${process.env.REACT_APP_TIMEZONEDB_API_KEY}&format=json&by=position&lat=${lat}&lng=${lng}`)
         .then((res) => {
-          console.log(res.data.formatted)
-          console.log(typeof(res.data.formatted))
-          const start = res.data.timestamp
-          setTime(start)
-          // let timeStamp = new Date(res.data.formatted)
-          // console.log(timeStamp.getMinutes() + ':' + timeStamp.getSeconds())
-          // timeStamp.setSeconds(timeStamp.getSeconds() + 1)
-          // console.log(timeStamp.toLocaleTimeString())
-          // setTime(timeStamp.toLocaleTimeString())
-          // setTime(res.data.formatted)
+          setTime(parseInt(res.data.timestamp))
         })
     })
 
@@ -174,7 +171,7 @@ const App = () => {
             {showDet &&
             <Card.Text>
                 The current temperature in {name} is {Math.floor(weather.degree)} °C and {condNumToString(weather.condition)}. It feels like {Math.floor(weather.appdegree)}°C.
-                The sunrise is at {weather.sunrise}, the sunset is at {weather.sunset} {time}
+                The sunrise is at {weather.sunrise}, the sunset is at {weather.sunset}
               <Timer startingTime={time}/>
             </Card.Text>
             }
