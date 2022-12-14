@@ -36,25 +36,26 @@ const weatherCode = {
 }
 
 const Timer = ({ startingTime }) => {
-  // const [clock, setClock] = useState(startingTime.startingTime)
-  // const clockRef = useRef(startingTime)
-  // clockRef.current = clock
-  const [clock, setClock] = useState(startingTime)
+  const timestamp = startingTime.timestamp
+  const offset = -1 * startingTime.gmtOffset
   const [format, setFormat] = useState('')
-
+  const [clock, setClock] = useState((timestamp + offset) * 1000)
   useEffect(() => {
     setInterval(() => {
       let date = new Date(clock)
-      console.log(date.toDateString())
-      setFormat(`${date.getHours()}:${date.getMinutes()}`)
-      setClock(clock + 1)
+      setFormat(getFormattedTime(date.getHours(), date.getMinutes(), date.getSeconds()))
+      setClock(clock + 1000)
     }, 1000)
   },[clock])
 
+  const getFormattedTime = (hours, min, sec) => {
+    if (hours >= 12) {
+      return `${hours - 12}:${min}:${sec} PM`
+    }
+    return `${hours}:${min}:${sec} AM`
+  }
   return (
     <div>
-      {/* {clock.getHours()} : {clock.getSeconds()} */}
-      {clock}
       {format}
     </div>
   )
@@ -132,10 +133,12 @@ const App = () => {
       const { lat, lng } = res.results[0].geometry.location
       axios.get(`http://api.timezonedb.com/v2.1/get-time-zone?key=${process.env.REACT_APP_TIMEZONEDB_API_KEY}&format=json&by=position&lat=${lat}&lng=${lng}`)
         .then((res) => {
-          setTime(parseInt(res.data.timestamp))
+          setTime({
+            timestamp: parseInt(res.data.timestamp),
+            gmtOffset: parseInt(res.data.gmtOffset)
+          })
         })
     })
-
   }
 
   const getAssetPath = (code) => `/color/${code}.svg`
