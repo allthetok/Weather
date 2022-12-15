@@ -39,8 +39,8 @@ const Timer = ({ startingTime }) => {
   const timestamp = startingTime.timestamp
   const offset = startingTime.gmtOffset
   const [format, setFormat] = useState('')
-  //const [clock, setClock] = useState((timestamp + offset) * 1000)
-  const [clock, setClock] = useState((timestamp) * 1000)
+  const [clock, setClock] = useState((timestamp + offset) * 1000)
+  //const [clock, setClock] = useState((timestamp) * 1000)
 
   useEffect(() => {
     setTimeout(() => {
@@ -154,10 +154,22 @@ const App = () => {
   const getDuskAndDawn = (lat, lng, pref) => {
     const suncalcObj = suncalc.getTimes(new Date(), lat, lng)
     if (pref === 'sunrise') {
-      return `${suncalcObj.sunrise.getHours()}:${suncalcObj.sunrise.getMinutes()}`
+      if (suncalcObj.sunrise.getHours() < 11) {
+        return `${suncalcObj.sunrise.getHours()}:${suncalcObj.sunrise.getMinutes()} AM`
+      }
+      else {
+        return `${suncalcObj.sunrise.getHours() - 12 }:${suncalcObj.sunrise.getMinutes()} PM`
+      }
     }
-    return `${suncalcObj.sunset.getHours()}:${suncalcObj.sunset.getMinutes()}`
+    if (suncalcObj.sunset.getHours() < 11) {
+      return `${suncalcObj.sunset.getHours()}:${suncalcObj.sunset.getMinutes()} AM`
+    }
+    else {
+      return `${suncalcObj.sunset.getHours() - 12 }:${suncalcObj.sunset.getMinutes()} PM`
+    }
   }
+
+
 
 
   return (
@@ -174,20 +186,26 @@ const App = () => {
         {weather.degree !== '' &&
       <>
         <Card style={{ width: '30rem', margin: 'auto', display: 'block' }}>
-          <p className='inline degree'>{Math.floor(weather.degree)} °C</p>
+          <p className='inline degree'>{Math.floor(weather.degree)}°C</p>
           <img className='inline weather-code' src={getAssetPath(weather.condition)}/>
           <Card.Body>
-            <Card.Title>{name}</Card.Title>
+            <Card.Title style={{ paddingBottom: '15px' }}>{name}</Card.Title>
             <button className='moreinfo' onClick={() => setShowDet(!showDet)}>More Info</button>
             {showDet &&
-            <Card.Text>
-                The current temperature in {name} is {Math.floor(weather.degree)} °C and {condNumToString(weather.condition)}. It feels like {Math.floor(weather.appdegree)}°C.
-              <div className='inline'>
-                <img className='suntimes' src={getAssetPath('1000')} /> {weather.sunrise}
-                <img className='suntimes' src={getAssetPath('clear night')} /> {weather.sunset})
+            <>
+              <Card.Text className='moreinfotxt'>
+                It is currently {condNumToString(weather.condition)} in {name.substr(0, name.indexOf(','))} and feels like {Math.floor(weather.appdegree)}°C.
+              </Card.Text>
+              <div>
+                <div className='inline box sunrise'>
+                  <img className='suntimes' src={getAssetPath('1000')} /> {weather.sunrise}
+                </div>
+                <div className='inline box2'>
+                  <img className='suntimes' src={getAssetPath('clear night')} /> {weather.sunset}
+                </div>
               </div>
               <Timer startingTime={time}/>
-            </Card.Text>
+            </>
             }
           </Card.Body>
         </Card>

@@ -27,7 +27,34 @@ body {
 }
 
 .suntimes {
-    width: 100px;
+    width: 60px;
+}
+
+.sunrise {
+    margin-right: 60px;
+}
+
+.box {
+    padding: 5px 15px;
+    border: 1px solid black;
+    /* background: #3DC6EA; */
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-image: url(./assets/sky3.jpeg);
+}
+
+.moreinfotxt {
+    margin-top: 10px;
+}
+
+.box2 {
+    padding: 5px 15px;
+    border: 1px solid black;
+    color: white;
+    /* background: #2C129E; */
+    background-image: url(./assets/night-sky.jpeg);
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .inline {
@@ -63,7 +90,8 @@ h2 {
 form {
     margin: auto;
     width: 50%;
-    padding-top: 100px;
+    padding-top: 75px;
+    padding-bottom: 75px;
 }
 
 .card {
@@ -73,7 +101,7 @@ form {
 
 .time {
     margin: auto;
-    padding-top: 5px;
+    margin-top: 10px;
     font-size: 200%;
     border: 2px solid #000;
     background-color: #A7A9AC;
