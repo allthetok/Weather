@@ -26,6 +26,10 @@ body {
     /* margin: auto; */
 }
 
+.suntimes {
+    width: 100px;
+}
+
 .inline {
     display: inline-block;
     flex-direction: row;
@@ -47,16 +51,33 @@ h2 {
     margin: auto;
     width: 50%;
     text-align: center;
+    padding-top: 40px;
+    font-size: 70px;
+    font-weight: 600;
+    background-image: linear-gradient(to left, #0B0B0C, #717178);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
 }
 
 form {
     margin: auto;
     width: 50%;
+    padding-top: 100px;
 }
 
 .card {
     width: 30rem;
     margin: auto;
+}
+
+.time {
+    margin: auto;
+    padding-top: 5px;
+    font-size: 200%;
+    border: 2px solid #000;
+    background-color: #A7A9AC;
+    width: 250px;
 }
 
 .search {

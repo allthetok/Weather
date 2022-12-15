@@ -37,25 +37,33 @@ const weatherCode = {
 
 const Timer = ({ startingTime }) => {
   const timestamp = startingTime.timestamp
-  const offset = -1 * startingTime.gmtOffset
+  const offset = startingTime.gmtOffset
   const [format, setFormat] = useState('')
-  const [clock, setClock] = useState((timestamp + offset) * 1000)
+  //const [clock, setClock] = useState((timestamp + offset) * 1000)
+  const [clock, setClock] = useState((timestamp) * 1000)
+
   useEffect(() => {
-    setInterval(() => {
-      let date = new Date(clock)
+    setTimeout(() => {
+      const date = new Date(clock)
       setFormat(getFormattedTime(date.getHours(), date.getMinutes(), date.getSeconds()))
       setClock(clock + 1000)
     }, 1000)
   },[clock])
 
   const getFormattedTime = (hours, min, sec) => {
+    if (min < 10) {
+      min = `0${min}`
+    }
+    if (sec < 10) {
+      sec = `0${sec}`
+    }
     if (hours >= 12) {
       return `${hours - 12}:${min}:${sec} PM`
     }
     return `${hours}:${min}:${sec} AM`
   }
   return (
-    <div>
+    <div className='time'>
       {format}
     </div>
   )
@@ -155,7 +163,7 @@ const App = () => {
   return (
     <div className='background'>
       <div className='content-wrap'>
-        <h2>Weather App</h2>
+        <h2>Weatherify</h2>
         <form onSubmit={handleSubmit}>
           <label>
             <input className='search' type="text" placeholder='Enter a city' onChange={(e) => setInputCity(e.target.value)}/>
@@ -174,7 +182,10 @@ const App = () => {
             {showDet &&
             <Card.Text>
                 The current temperature in {name} is {Math.floor(weather.degree)} °C and {condNumToString(weather.condition)}. It feels like {Math.floor(weather.appdegree)}°C.
-                The sunrise is at {weather.sunrise}, the sunset is at {weather.sunset}
+              <div className='inline'>
+                <img className='suntimes' src={getAssetPath('1000')} /> {weather.sunrise}
+                <img className='suntimes' src={getAssetPath('clear night')} /> {weather.sunset})
+              </div>
               <Timer startingTime={time}/>
             </Card.Text>
             }
