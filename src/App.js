@@ -37,15 +37,14 @@ const weatherCode = {
 
 const Timer = ({ startingTime }) => {
   const timestamp = startingTime.timestamp
-  const offset = startingTime.gmtOffset
+  const dst = startingTime.dst
   const [format, setFormat] = useState('')
-  const [clock, setClock] = useState((timestamp + offset) * 1000)
-  //const [clock, setClock] = useState((timestamp) * 1000)
+  const [clock, setClock] = useState((timestamp - dst * 3600) * 1000)
 
   useEffect(() => {
     setTimeout(() => {
       const date = new Date(clock)
-      setFormat(getFormattedTime(date.getHours(), date.getMinutes(), date.getSeconds()))
+      setFormat(getFormattedTime(date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()))
       setClock(clock + 1000)
     }, 1000)
   },[clock])
@@ -136,14 +135,16 @@ const App = () => {
     return weatherCode[code]
   }
 
-  const getCurrentTime = () => {
+  const getCurrentTime = async () => {
+
     Geocode.fromAddress(inputCity).then((res) => {
       const { lat, lng } = res.results[0].geometry.location
       axios.get(`http://api.timezonedb.com/v2.1/get-time-zone?key=${process.env.REACT_APP_TIMEZONEDB_API_KEY}&format=json&by=position&lat=${lat}&lng=${lng}`)
         .then((res) => {
           setTime({
             timestamp: parseInt(res.data.timestamp),
-            gmtOffset: parseInt(res.data.gmtOffset)
+            gmtOffset: parseInt(res.data.gmtOffset),
+            dst: parseInt(res.data.dst)
           })
         })
     })
@@ -154,23 +155,32 @@ const App = () => {
   const getDuskAndDawn = (lat, lng, pref) => {
     const suncalcObj = suncalc.getTimes(new Date(), lat, lng)
     if (pref === 'sunrise') {
-      if (suncalcObj.sunrise.getHours() < 11) {
-        return `${suncalcObj.sunrise.getHours()}:${suncalcObj.sunrise.getMinutes()} AM`
+      if (suncalcObj.sunrise.getHours() < 12) {
+        return `${suncalcObj.sunrise.getHours()}:${suncalcObj.sunrise.getMinutes()<10?'0':''}${suncalcObj.sunrise.getMinutes()} AM`
+      }
+      else if (suncalcObj.sunrise.getHours() === 0) {
+        return `12:${suncalcObj.sunrise.getMinutes()<10?'0':''}${suncalcObj.sunrise.getMinutes()} AM`
+      }
+      else if (suncalcObj.sunrise.getHours() === 12) {
+        return `${suncalcObj.sunrise.getHours()}:${suncalcObj.sunrise.getMinutes()<10?'0':''}${suncalcObj.sunrise.getMinutes()} PM`
       }
       else {
-        return `${suncalcObj.sunrise.getHours() - 12 }:${suncalcObj.sunrise.getMinutes()} PM`
+        return `${suncalcObj.sunrise.getHours() - 12 }:${suncalcObj.sunrise.getMinutes()<10?'0':''}${suncalcObj.sunrise.getMinutes()} PM`
       }
     }
-    if (suncalcObj.sunset.getHours() < 11) {
-      return `${suncalcObj.sunset.getHours()}:${suncalcObj.sunset.getMinutes()} AM`
+    if (suncalcObj.sunset.getHours() < 12) {
+      return `${suncalcObj.sunset.getHours()}:${suncalcObj.sunset.getMinutes()<10?'0':''}${suncalcObj.sunset.getMinutes()} AM`
+    }
+    else if (suncalcObj.sunset.getHours() === 0) {
+      return `12:${suncalcObj.sunset.getMinutes()<10?'0':''}${suncalcObj.sunset.getMinutes()} AM`
+    }
+    else if (suncalcObj.sunset.getHours() === 12) {
+      return `${suncalcObj.sunset.getHours()}:${suncalcObj.sunset.getMinutes()<10?'0':''}${suncalcObj.sunset.getMinutes()} PM`
     }
     else {
-      return `${suncalcObj.sunset.getHours() - 12 }:${suncalcObj.sunset.getMinutes()} PM`
+      return `${suncalcObj.sunset.getHours() - 12 }:${suncalcObj.sunset.getMinutes()<10?'0':''}${suncalcObj.sunset.getMinutes()} PM`
     }
   }
-
-
-
 
   return (
     <div className='background'>
